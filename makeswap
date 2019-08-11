@@ -1,0 +1,12 @@
+is_swap_on=$(swapon --show | grep -c "swap")
+
+if [ $is_swap_on == '0' ]; then
+        x=$(df -h | grep /mnt | awk '{print $4}')
+        new_swap_size=$(echo $x | awk '-F.' '{print $1}')
+        if [ ! $new_swap_size == '0' ]; then
+                fallocate -l ${new_swap_size}G /mnt/swap_file >> /dev/null 2>&1
+                chmod 600 /mnt/swap_file >> /dev/null 2>&1
+                mkswap /mnt/swap_file >> /dev/null 2>&1
+                swapon /mnt/swap_file >> /dev/null 2>&1 
+        fi
+fi
