@@ -1,0 +1,18 @@
+#!/bin/bash
+is_php7_module=$(/sbin/apache2 -M | /usr/bin/grep -c php7_module)
+is_php72_fpm=$(/sbin/apache2 -M | /usr/bin/grep -c proxy_fcgi)
+
+if [ ${is_php7_module} -gt 0 ]
+then
+        a2dismod php7.2 setenviv -f >> /dev/null 2>&1
+        a2enmod proxy_fcgi setenvif >> /dev/null 2>&1
+        a2enconf php7.2-fpm >> /dev/null 2>&1
+fi
+
+if [ ${is_php72_fpm} -gt 0 ]
+then
+        a2dismod proxy_fcgi -f >> /dev/null 2>&1
+        a2enmod php7.2 setenvif >> /dev/null 2>&1
+fi
+
+systemctl restart apache2 >> /dev/null 2>&1
