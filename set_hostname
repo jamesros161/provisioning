@@ -1,7 +1,14 @@
 #!/bin/bash
-new_hostname=$(hostname)
+if [ -z $1 ]; then
+        echo "no hostname specified"
+        new_hostname=$(hostname)
+else
+        new_hostname=$1
+fi
+
 if [[ ! $new_hostname  ==  *"twmsllc"* ]]; then
         echo "Hostname changed"
         fqdn="${new_hostname}.twmsllc.com"
         hostname ${fqdn}
 fi
+
